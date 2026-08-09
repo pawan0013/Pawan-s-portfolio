@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pawan Kumar - Opérateur Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0908;
+  --bone: #F5F3EE;
+  --bone-dim: #C8C3B8;
+  --mute: #8A857C;
+  --champagne: #C9A961;
+  --champagne-bright: #E8C77A;
+  --line: rgba(245, 243, 238, 0.10);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--ink);
+  color: var(--bone);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+::selection { background: var(--champagne); color: var(--ink); }
+
+/* FIXED LANGUAGE TOGGLE - TOP RIGHT */
+.lang-switcher {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 300;
+  display: flex;
+  gap: 8px;
+  background: rgba(10, 9, 8, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.lang-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--mute);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.lang-btn:hover {
+  background: rgba(201, 169, 97, 0.15);
+  color: var(--bone);
+}
+.lang-btn.active {
+  background: var(--champagne);
+  color: var(--ink);
+}
+
+/* HERO */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#hero-video {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+}
+#hero-video.ready { opacity: 1; }
+#hero-video-bg {
+  position: absolute;
+  top: -10%; left: -10%;
+  width: 120%; height: 120%;
+  object-fit: cover;
+  filter: blur(60px) brightness(0.7);
+  opacity: 0.4;
+}
+#hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,9,8,0.6) 0%, rgba(10,9,8,0.3) 50%, rgba(10,9,8,0.75) 100%);
+  pointer-events: none;
+}
+#particles-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease-out 0.5s;
+}
+#particles-canvas.ready { opacity: 1; }
+
+/* AIRPLANE - 3X MORE PROMINENT */
+#flight-path {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease 1.5s;
+}
+#flight-path.ready { opacity: 1; }
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 900px;
+  padding: 0 24px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+.hero-content.ready {
+  animation: fadeInUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.8s forwards;
+}
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+.hero-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(56px, 9vw, 110px);
+  line-height: 0.95;
+  color: var(--bone);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.hero-subtitle {
+  font-size: clamp(16px, 2.2vw, 22px);
+  color: var(--bone-dim);
+  font-weight: 300;
+  max-width: 680px;
+  margin: 0 auto 32px;
+  line-height: 1.5;
+}
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--mute);
+}
+.hero-meta-item { display: flex; align-items: center; gap: 8px; }
+.hero-meta-item strong { color: var(--champagne); font-weight: 500; }
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 2s forwards, bounce 2s ease-in-out 3s infinite;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, transparent 0%, var(--champagne) 50%, transparent 100%);
+  margin: 0 auto 8px;
+}
+.scroll-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  z-index: 20;
+  display: flex;
+  gap: 12px;
+}
+.ctrl-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(245, 243, 238, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 243, 238, 0.15);
+  color: var(--bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.ctrl-btn:hover {
+  background: rgba(245, 243, 238, 0.15);
+  border-color: rgba(201, 169, 97, 0.4);
+}
+.ctrl-btn svg { width: 20px; height: 20px; }
+
+/* SECTIONS */
+section {
+  min-height: 100vh;
+  padding: 120px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+.section-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+.section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(40px, 5.5vw, 64px);
+  line-height: 1.1;
+  color: var(--bone);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+.section-title em {
+  font-style: italic;
+  color: var(--champagne-bright);
+  font-weight: 600;
+}
+.section-lead {
+  font-size: clamp(18px, 2.2vw, 22px);
+  color: var(--bone-dim);
+  max-width: 740px;
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  padding-left: 80px;
+  margin-top: 60px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--champagne) 0%, transparent 100%);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -66px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--champagne);
+  border: 3px solid var(--ink);
+  box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.2);
+}
+.timeline-year {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--champagne);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.timeline-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--bone);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.timeline-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bone-dim);
+  max-width: 640px;
+}
+.timeline-body strong {
+  color: var(--bone);
+  font-weight: 600;
+}
+.timeline-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.stat {
+  font-size: 13px;
+}
+.stat-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  color: var(--champagne);
+  font-weight: 600;
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  color: var(--mute);
+  font-size: 12px;
+}
+
+/* EDUCATION CARDS */
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+.edu-card {
+  background: linear-gradient(180deg, rgba(245,243,238,0.04) 0%, rgba(245,243,238,0.015) 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 40px 36px;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.edu-card:hover {
+  border-color: rgba(201,169,97,0.4);
+  transform: translateY(-4px);
+}
+.edu-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-bottom: 16px;
+}
+.edu-card h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.1;
+  color: var(--bone);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.edu-meta {
+  font-size: 14px;
+  color: var(--mute);
+  margin-bottom: 20px;
+}
+.edu-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bone-dim);
+}
+.edu-body strong {
+  color: var(--bone);
+  font-weight: 600;
+}
+
+/* CHAT */
+.chat-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--champagne);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(201, 169, 97, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.chat-fab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(201, 169, 97, 0.5);
+}
+.chat-fab svg {
+  width: 26px;
+  height: 26px;
+  color: #fff;
+}
+.chat-fab.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.chat-pulse {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4A9B7F;
+  box-shadow: 0 0 0 0 rgba(74, 155, 127, 0.7);
+  animation: chat-pulse-anim 2s ease-out infinite;
+}
+@keyframes chat-pulse-anim {
+  0% { box-shadow: 0 0 0 0 rgba(74, 155, 127, 0.7); }
+  50% { box-shadow: 0 0 0 8px rgba(74, 155, 127, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 155, 127, 0); }
+}
+.chat-container {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 100;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  max-height: 70vh;
+  background: rgba(250, 250, 248, 0.98);
+  border: 1px solid rgba(26, 23, 20, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.chat-container.open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+.chat-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(26, 23, 20, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+}
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: url('assets/01-hero-edhec.jpg') center/cover;
+  border: 2px solid rgba(201, 169, 97, 0.3);
+}
+.chat-header h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  color: #1A1714;
+  margin: 0;
+  font-weight: 500;
+  flex: 1;
+}
+.chat-status {
+  font-size: 11px;
+  color: #4A9B7F;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.chat-close-btn {
+  background: transparent;
+  border: none;
+  color: #8A857C;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.chat-close-btn:hover {
+  color: #1A1714;
+}
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #FAFAF8;
+}
+.chat-msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1A1714;
+}
+.chat-msg.bot {
+  align-self: flex-start;
+  background: #fff;
+  border: 1px solid rgba(26, 23, 20, 0.08);
+  border-bottom-left-radius: 4px;
+}
+.chat-msg.user {
+  align-self: flex-end;
+  background: #C9A961;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-disclaimer {
+  font-size: 10px;
+  color: #8A857C;
+  padding: 8px 20px;
+  text-align: center;
+  border-top: 1px solid rgba(26, 23, 20, 0.06);
+  background: #fff;
+}
+.chat-quick {
+  padding: 12px 16px 16px;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border-radius: 0 0 16px 16px;
+}
+.chat-q-btn {
+  text-align: left;
+  background: rgba(26, 23, 20, 0.03);
+  border: 1px solid rgba(26, 23, 20, 0.08);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: #1A1714;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+}
+.chat-q-btn:hover {
+  background: rgba(201, 169, 97, 0.08);
+  border-color: rgba(201, 169, 97, 0.3);
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+footer {
+  padding: 40px 24px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+  background: var(--ink);
+}
+footer p {
+  font-size: 12px;
+  color: var(--mute);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .hero-meta { flex-direction: column; gap: 12px; }
+  .video-controls { bottom: 20px; right: 20px; }
+  .ctrl-btn { width: 42px; height: 42px; }
+  .lang-switcher { top: 16px; right: 16px; }
+  .timeline { padding-left: 60px; }
+  .timeline::before { left: 15px; }
+  .timeline-item::before { left: -51px; }
+  .chat-container {
+    right: 12px;
+    bottom: 90px;
+    width: calc(100vw - 24px);
+  }
+  .chat-fab {
+    right: 12px;
+    bottom: 12px;
+    width: 56px;
+    height: 56px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE SWITCHER (FIXED TOP-RIGHT) -->
+<div class="lang-switcher">
+  <button class="lang-btn active" data-lang="fr">FR</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<!-- Due to character limits, I need to continue this in the next message. Saving progress and will complete the HTML -->
+
+<!-- HERO VIDEO -->
+<section id="hero">
+  <video id="hero-video-bg" autoplay loop muted playsinline></video>
+  <video id="hero-video" autoplay loop playsinline></video>
+  <div id="hero-gradient"></div>
+  <canvas id="particles-canvas"></canvas>
+  
+  <!-- AIRPLANE - 3X BIGGER/BRIGHTER -->
+  <svg id="flight-path" viewBox="0 0 1000 1000">
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <path id="arc-path" d="M 750 700 Q 500 300, 250 300" fill="none" stroke="rgba(201,169,97,0.8)" stroke-width="5" stroke-dasharray="12,10" filter="url(#glow)" />
+    <g id="airplane" transform="translate(750,700)" opacity="0">
+      <path d="M 0,-15 L -7,7 L 0,4 L 7,7 Z" fill="#E8C77A" stroke="none" filter="url(#glow)"/>
+      <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(232,199,122,0.8)" stroke-width="3"/>
+    </g>
+    <circle cx="750" cy="700" r="10" fill="#C00000" opacity="1" filter="url(#glow)">
+      <animate attributeName="r" values="10;15;10" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="770" y="710" fill="rgba(245,243,238,1)" font-size="18" font-family="IBM Plex Mono, monospace" font-weight="600">DELHI</text>
+    <circle cx="250" cy="300" r="10" fill="#E8C77A" opacity="1" filter="url(#glow)">
+      <animate attributeName="r" values="10;15;10" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <text x="270" y="310" fill="rgba(245,243,238,1)" font-size="18" font-family="IBM Plex Mono, monospace" font-weight="600">LILLE</text>
+  </svg>
+  
+  <div class="hero-content">
+    <div class="hero-tag"><span class="content-fr">Opérateur • Planificateur • Optimiseur</span><span class="content-en" style="display:none;">Operator • Planner • Optimizer</span></div>
+    <h1 class="hero-name">Pawan<br/>Kumar</h1>
+    <p class="hero-subtitle">
+      <span class="content-fr">J'optimise les entreprises en utilisant la finance, la technologie et les opérations. Trois compétences, un mandat : trouver la contrainte, modéliser l'impact, exécuter la solution.</span>
+      <span class="content-en" style="display:none;">I optimize businesses using finance, technology, and operations. Three skillsets, one mandate: find the constraint, model the impact, execute the solution.</span>
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong><span class="content-fr">Finance :</span><span class="content-en" style="display:none;">Finance:</span></strong> LBO, DCF, Unit Economics, M&A</div>
+      <div class="hero-meta-item"><strong><span class="content-fr">Tech :</span><span class="content-en" style="display:none;">Tech:</span></strong> SaaS, Dashboards, <span class="content-fr">Automatisation</span><span class="content-en" style="display:none;">Automation</span></div>
+      <div class="hero-meta-item"><strong>Ops :</strong> Supply Chain, P&L, Scaling</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" onclick="document.getElementById('approach').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">Scroll</div>
+  </div>
+
+  <div class="video-controls">
+    <button class="ctrl-btn" id="playBtn" aria-label="Play/Pause">
+      <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      <svg id="pauseIcon" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+      </svg>
+    </button>
+    <button class="ctrl-btn" id="muteBtn" aria-label="Mute/Unmute">
+      <svg id="soundIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      </svg>
+      <svg id="muteIcon" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+
+<!-- SECTION 1: HOW I WORK -->
+<section id="approach" style="background: linear-gradient(180deg, var(--ink) 0%, #14110F 100%);">
+  <div class="container">
+    <div class="section-tag"><span class="content-fr">Ma Méthode</span><span class="content-en" style="display:none;">My Approach</span></div>
+    <h2 class="section-title">
+      <span class="content-fr">Je ne suis pas <em>juste</em> finance.<br/>Je suis pas <em>juste</em> tech.<br/>Je suis un <em>opérateur.</em></span>
+      <span class="content-en" style="display:none;">I'm not <em>just</em> finance.<br/>Not <em>just</em> tech.<br/>I'm an <em>operator.</em></span>
+    </h2>
+    <p class="section-lead">
+      <span class="content-fr">La plupart des gens se spécialisent. Moi, je connecte les points entre finance, technologie et opérations pour trouver ce qui fait réellement bouger l'entreprise.</span>
+      <span class="content-en" style="display:none;">Most people specialize. I connect the dots between finance, technology, and operations to find what actually moves the business.</span>
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-top: 60px;">
+      <div class="fade-in" style="background: linear-gradient(180deg, rgba(201,169,97,0.06) 0%, rgba(201,169,97,0.02) 100%); border: 1px solid rgba(201,169,97,0.2); border-radius: 12px; padding: 32px 28px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--champagne); margin-bottom: 14px;">01 · <span class="content-fr">Finance</span><span class="content-en" style="display:none;">Finance</span></div>
+        <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 26px; color: var(--bone); margin-bottom: 14px; font-weight: 500;"><span class="content-fr">Je construis les modèles.</span><span class="content-en" style="display:none;">I build the models.</span></h3>
+        <p style="font-size: 15px; line-height: 1.7; color: var(--bone-dim); margin-bottom: 18px;"><span class="content-fr">Modèles trois états, structures LBO, projections DCF, unit economics. Je ne fais pas que calculer - je stress-teste la thèse.</span><span class="content-en" style="display:none;">Three-statement models, LBO structures, DCF projections, unit economics. I don't just run numbers - I stress-test the thesis.</span></p>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 13px; color: var(--mute);">→ <span class="content-fr">Modèle LBO $2.4B (6.0× leverage, 9 scénarios)</span><span class="content-en" style="display:none;">$2.4B LBO model (6.0× leverage, 9 scenarios)</span></div>
+          <div style="font-size: 13px; color: var(--mute);">→ <span class="content-fr">Levée Vanivert structurée via BSA-Air</span><span class="content-en" style="display:none;">Vanivert fundraise via BSA-Air</span></div>
+          <div style="font-size: 13px; color: var(--mute);">→ <span class="content-fr">Mémo VC complet rédigé</span><span class="content-en" style="display:none;">Full VC investment memo</span></div>
+        </div>
+      </div>
+
+      <div class="fade-in" style="background: linear-gradient(180deg, rgba(74,155,127,0.06) 0%, rgba(74,155,127,0.02) 100%); border: 1px solid rgba(74,155,127,0.2); border-radius: 12px; padding: 32px 28px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #4A9B7F; margin-bottom: 14px;">02 · <span class="content-fr">Technologie</span><span class="content-en" style="display:none;">Technology</span></div>
+        <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 26px; color: var(--bone); margin-bottom: 14px; font-weight: 500;"><span class="content-fr">J'automatise le chaos.</span><span class="content-en" style="display:none;">I automate the chaos.</span></h3>
+        <p style="font-size: 15px; line-height: 1.7; color: var(--bone-dim); margin-bottom: 18px;"><span class="content-fr">Dashboards, automatisation process, tracking KPI. Je code quand les spreadsheets ne suffisent plus.</span><span class="content-en" style="display:none;">Dashboards, process automation, KPI tracking. I code when spreadsheets can't keep up.</span></p>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 13px; color: var(--mute);">→ Dashboards ops temps réel (Alliance)</div>
+          <div style="font-size: 13px; color: var(--mute);">→ Co-fondé Vanivert AI (voice automation)</div>
+          <div style="font-size: 13px; color: var(--mute);">→ <span class="content-fr">80% réduction erreurs via automation</span><span class="content-en" style="display:none;">80% error reduction via automation</span></div>
+        </div>
+      </div>
+
+      <div class="fade-in" style="background: linear-gradient(180deg, rgba(58,107,140,0.06) 0%, rgba(58,107,140,0.02) 100%); border: 1px solid rgba(58,107,140,0.2); border-radius: 12px; padding: 32px 28px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #3A6B8C; margin-bottom: 14px;">03 · <span class="content-fr">Opérations</span><span class="content-en" style="display:none;">Operations</span></div>
+        <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 26px; color: var(--bone); margin-bottom: 14px; font-weight: 500;"><span class="content-fr">J'exécute en temps réel.</span><span class="content-en" style="display:none;">I execute in real time.</span></h3>
+        <p style="font-size: 15px; line-height: 1.7; color: var(--bone-dim); margin-bottom: 18px;"><span class="content-fr">Supply chain, logistics, scaling équipe, mapping process. J'ai géré du cargo en mer et du SaaS à l'échelle.</span><span class="content-en" style="display:none;">Supply chain, logistics, team scaling, process mapping. I've managed cargo at sea and SaaS at scale.</span></p>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 13px; color: var(--mute);">→ <span class="content-fr">Cargo €M+ géré, 15+ pays</span><span class="content-en" style="display:none;">€M+ cargo, 15+ countries</span></div>
+          <div style="font-size: 13px; color: var(--mute);">→ Alliance scalé à 5 villes, 100+ partenaires</div>
+          <div style="font-size: 13px; color: var(--mute);">→ Churn 15% → 6% <span class="content-fr">en 2 semaines</span><span class="content-en" style="display:none;">in 2 weeks</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 2: EXPERIENCE TIMELINE (WITH ANIMATIONS) -->
+<section id="experience" style="background: #14110F;">
+  <div class="container">
+    <div class="section-tag"><span class="content-fr">Parcours</span><span class="content-en" style="display:none;">Experience</span></div>
+    <h2 class="section-title">
+      <span class="content-fr">Trois rôles. Un fil conducteur :<br/><em>construire des systèmes</em> qui scalent sous pression.</span>
+      <span class="content-en" style="display:none;">Three roles. One thread:<br/><em>building systems</em> that scale under pressure.</span>
+    </h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2022 - 2024</div>
+        <h3 class="timeline-title">Junior Deck Officer · Synergy Marine</h3>
+        <div class="timeline-body">
+          <p><span class="content-fr"><strong>Cargo multi-million EUR</strong> à travers <strong>15+ pays</strong>. Appris que la paperasse est le deal, la précision est survie, et chaque décision a un coût. Cargos pétroliers pour BP, Total, Shell - navigation internationale avec documentation douanière complexe.</span><span class="content-en" style="display:none;"><strong>Multi-million EUR cargo</strong> across <strong>15+ countries</strong>. Learned that paperwork is the deal, precision is survival, every decision has a cost. Oil tankers for BP, Total, Shell - international navigation with complex customs documentation.</span></p>
+          <div class="timeline-stats">
+            <div class="stat"><span class="stat-num">15+</span><span class="stat-label"><span class="content-fr">Pays</span><span class="content-en" style="display:none;">Countries</span></span></div>
+            <div class="stat"><span class="stat-num">€M+</span><span class="stat-label"><span class="content-fr">Cargo Géré</span><span class="content-en" style="display:none;">Cargo Managed</span></span></div>
+            <div class="stat"><span class="stat-num">8.9/10</span><span class="stat-label"><span class="content-fr">Diplôme DNS</span><span class="content-en" style="display:none;">DNS Diploma</span></span></div>
+          </div>
+        </div>
+        <!-- WAVE ANIMATION - 3X BIGGER -->
+        <svg style="position: absolute; right: -140px; top: 20px; width: 240px; opacity: 0.5;" viewBox="0 0 300 100">
+          <path d="M 0 50 Q 38 30, 75 50 T 150 50 T 225 50 T 300 50" fill="none" stroke="#3A6B8C" stroke-width="4">
+            <animate attributeName="d" values="M 0 50 Q 38 30, 75 50 T 150 50 T 225 50 T 300 50;M 0 50 Q 38 70, 75 50 T 150 50 T 225 50 T 300 50;M 0 50 Q 38 30, 75 50 T 150 50 T 225 50 T 300 50" dur="3s" repeatCount="indefinite"/>
+          </path>
+          <path d="M 0 65 Q 38 45, 75 65 T 150 65 T 225 65 T 300 65" fill="none" stroke="#3A6B8C" stroke-width="3" opacity="0.7">
+            <animate attributeName="d" values="M 0 65 Q 38 45, 75 65 T 150 65 T 225 65 T 300 65;M 0 65 Q 38 85, 75 65 T 150 65 T 225 65 T 300 65;M 0 65 Q 38 45, 75 65 T 150 65 T 225 65 T 300 65" dur="3.5s" repeatCount="indefinite"/>
+          </path>
+          <!-- Ship icon 3× bigger -->
+          <g transform="translate(120, 40)">
+            <path d="M -9 0 L 0 -9 L 9 0 L 6 6 L -6 6 Z" fill="#5B8FB9"/>
+            <rect x="-1.5" y="-15" width="3" height="6" fill="#5B8FB9"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2024 - 2025</div>
+        <h3 class="timeline-title">Co-Founder · Alliance Infosys</h3>
+        <div class="timeline-body">
+          <p><span class="content-fr">Bootstrappé B2B SaaS de zéro à <strong>~€100K MRR</strong> en 18 mois dans <strong>5 villes</strong>. Tech, ops, supply chain, finance - tout géré. KPI dashboards avant scaling. <strong>80% réduction erreurs</strong> via standardisation process. Rétention ~85% via check lists visuels et formation ops leads régionaux.</span><span class="content-en" style="display:none;">Bootstrapped B2B SaaS from zero to <strong>~€100K MRR</strong> in 18 months across <strong>5 cities</strong>. Led tech, ops, supply chain, finance. Built KPI dashboards before scaling. <strong>80% error reduction</strong> through process standardization. ~85% retention via visual checklists and regional ops training.</span></p>
+          <div class="timeline-stats">
+            <div class="stat"><span class="stat-num">€100K</span><span class="stat-label">MRR</span></div>
+            <div class="stat"><span class="stat-num">5</span><span class="stat-label"><span class="content-fr">Villes</span><span class="content-en" style="display:none;">Cities</span></span></div>
+            <div class="stat"><span class="stat-num">~85%</span><span class="stat-label"><span class="content-fr">Rétention</span><span class="content-en" style="display:none;">Retention</span></span></div>
+          </div>
+        </div>
+        <!-- NETWORK ANIMATION - 3X BIGGER -->
+        <svg style="position: absolute; right: -120px; top: 20px; width: 220px; opacity: 0.5;" viewBox="0 0 240 150">
+          <line x1="120" y1="75" x2="60" y2="30" stroke="#4A9B7F" stroke-width="3" opacity="0.5">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="120" y1="75" x2="180" y2="30" stroke="#4A9B7F" stroke-width="3" opacity="0.5">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.3s" repeatCount="indefinite"/>
+          </line>
+          <line x1="120" y1="75" x2="60" y2="120" stroke="#4A9B7F" stroke-width="3" opacity="0.5">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.6s" repeatCount="indefinite"/>
+          </line>
+          <line x1="120" y1="75" x2="180" y2="120" stroke="#4A9B7F" stroke-width="3" opacity="0.5">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.8s" repeatCount="indefinite"/>
+          </line>
+          <!-- Central server node 3× bigger -->
+          <circle cx="120" cy="75" r="13" fill="#4A9B7F" opacity="0.9">
+            <animate attributeName="r" values="13;17;13" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <rect x="114" y="69" width="12" height="12" fill="#14110F" opacity="0.7"/>
+          <!-- Edge nodes 3× bigger -->
+          <circle cx="60" cy="30" r="8" fill="#788C5D"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="180" cy="30" r="8" fill="#788C5D"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.3s" repeatCount="indefinite"/></circle>
+          <circle cx="60" cy="120" r="8" fill="#788C5D"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.6s" repeatCount="indefinite"/></circle>
+          <circle cx="180" cy="120" r="8" fill="#788C5D"><animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+          <circle cx="30" cy="75" r="6" fill="#788C5D"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        </svg>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2025 - <span class="content-fr">Présent</span><span class="content-en" style="display:none;">Present</span></div>
+        <h3 class="timeline-title">EDHEC Business School · Lille</h3>
+        <div class="timeline-body">
+          <p><span class="content-fr">Master in Management, Grande École. Spécialisation : <strong>Corporate Finance & Financial Markets</strong>. Quitté une entreprise profitable pour apprendre le langage du capital. <strong>Vanivert AI (EDHEC Project)</strong> : co-fondé voice AI pour PME européennes, structuré levée via BSA-Air, 200+ interviews clients Lille/Paris. CFA Level I candidat (août 2026).</span><span class="content-en" style="display:none;">Master in Management, Grande École. Specialization: <strong>Corporate Finance & Financial Markets</strong>. Left a profitable company to learn the language of capital. <strong>Vanivert AI (EDHEC Project)</strong>: co-founded voice AI for European SMBs, fundraise via BSA-Air, 200+ customer interviews Lille/Paris. CFA Level I candidate (Aug 2026).</span></p>
+        </div>
+        <!-- WAVEFORM - 3X MORE BARS -->
+        <svg style="position: absolute; right: -100px; top: 30px; width: 180px; opacity: 0.4;" viewBox="0 0 600 120">
+          <rect x="10" y="40" width="12" height="40" fill="#E8C77A" rx="6">
+            <animate attributeName="height" values="40;80;40" dur="1.2s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="40;20;40" dur="1.2s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="35" y="35" width="12" height="50" fill="#C9A961" rx="6">
+            <animate attributeName="height" values="50;90;50" dur="0.9s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="35;15;35" dur="0.9s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="60" y="30" width="12" height="60" fill="#E8C77A" rx="6">
+            <animate attributeName="height" values="60;95;60" dur="1.1s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="30;12.5;30" dur="1.1s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="85" y="38" width="12" height="44" fill="#C9A961" rx="6">
+            <animate attributeName="height" values="44;82;44" dur="1.3s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="38;19;38" dur="1.3s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="110" y="32" width="12" height="56" fill="#E8C77A" rx="6">
+            <animate attributeName="height" values="56;88;56" dur="0.95s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="32;16;32" dur="0.95s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="135" y="36" width="12" height="48" fill="#C9A961" rx="6">
+            <animate attributeName="height" values="48;84;48" dur="1.15s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="36;18;36" dur="1.15s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="160" y="28" width="12" height="64" fill="#E8C77A" rx="6">
+            <animate attributeName="height" values="64;98;64" dur="1.05s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="28;11;28" dur="1.05s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="185" y="34" width="12" height="52" fill="#C9A961" rx="6">
+            <animate attributeName="height" values="52;86;52" dur="1.25s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="34;17;34" dur="1.25s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="210" y="37" width="12" height="46" fill="#E8C77A" rx="6">
+            <animate attributeName="height" values="46;83;46" dur="0.85s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="37;18.5;37" dur="0.85s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="235" y="31" width="12" height="58" fill="#C9A961" rx="6">
+            <animate attributeName="height" values="58;92;58" dur="1.18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="31;14;31" dur="1.18s" repeatCount="indefinite"/>
+          </rect>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 3: EDUCATION (FULL DETAILS) -->
+<section id="education" style="background: var(--ink);">
+  <div class="container">
+    <div class="section-tag"><span class="content-fr">Formation</span><span class="content-en" style="display:none;">Education</span></div>
+    <h2 class="section-title">
+      <span class="content-fr">Théorie <em>+ pratique</em>.<br/>Pas l'un ou l'autre.</span>
+      <span class="content-en" style="display:none;">Theory <em>+ practice</em>.<br/>Not one or the other.</span>
+    </h2>
+    <p class="section-lead">
+      <span class="content-fr">Trois diplômes. Deux certifications. Un fil conducteur : apprendre en faisant.</span>
+      <span class="content-en" style="display:none;">Three degrees. Two certifications. One thread: learning by doing.</span>
+    </p>
+
+    <div class="edu-grid">
+      <!-- EDHEC -->
+      <div class="edu-card fade-in">
+        <div class="edu-tag"><span class="content-fr">Grande École</span><span class="content-en" style="display:none;">Grande École</span></div>
+        <h3>EDHEC Business School</h3>
+        <div class="edu-meta">Master in Management · <span class="content-fr">Spécialisation</span><span class="content-en" style="display:none;">Specialization</span> Corporate Finance & Financial Markets · 2025-2027</div>
+        <div class="edu-body">
+          <p><span class="content-fr"><strong>Grande École Programme</strong> avec année de césure professionnelle obligatoire post-M1. Spécialisation en finance d'entreprise et marchés financiers. <strong>Projets majeurs :</strong> Modèle LBO $2.4B (Tata Air India), mémorandum d'investissement VC complet, co-fondation Vanivert AI avec 200+ entretiens clients validant le product-market fit.</span><span class="content-en" style="display:none;"><strong>Grande École Programme</strong> with mandatory professional gap year post-M1. Specialization in corporate finance and financial markets. <strong>Major projects:</strong> $2.4B LBO model (Tata Air India), full VC investment memorandum, Vanivert AI co-founding with 200+ customer interviews validating product-market fit.</span></p>
+          <p style="margin-top: 12px;"><span class="content-fr"><strong>CFA Level I Candidate</strong> (examen août 2026)</span><span class="content-en" style="display:none;"><strong>CFA Level I Candidate</strong> (exam Aug 2026)</span></p>
+        </div>
+      </div>
+
+      <!-- Computer Science + Nautical Science -->
+      <div class="edu-card fade-in">
+        <div class="edu-tag"><span class="content-fr">Double Diplôme</span><span class="content-en" style="display:none;">Dual Degree</span></div>
+        <h3><span class="content-fr">Informatique + Sciences Nautiques</span><span class="content-en" style="display:none;">Computer Science + Nautical Science</span></h3>
+        <div class="edu-meta">B.Tech Computer Science Engineering · Diploma in Nautical Science · 2018-2022</div>
+        <div class="edu-body">
+          <p><span class="content-fr"><strong>Double diplôme concurrent :</strong> B.Tech en Computer Science Engineering et Diplôme en Sciences Nautiques (DNS). Formation technique en programmation, structures de données, algorithmes combinée à formation maritime internationale (navigation, cargo management, réglementation SOLAS/MARPOL). Diplôme DNS avec note 8.9/10.</span><span class="content-en" style="display:none;"><strong>Concurrent dual degree:</strong> B.Tech in Computer Science Engineering and Diploma in Nautical Science (DNS). Technical training in programming, data structures, algorithms combined with international maritime training (navigation, cargo management, SOLAS/MARPOL regulations). DNS diploma grade 8.9/10.</span></p>
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="edu-card fade-in">
+        <div class="edu-tag"><span class="content-fr">Certifications</span><span class="content-en" style="display:none;">Certifications</span></div>
+        <h3>Harvard + Bloomberg</h3>
+        <div class="edu-meta"><span class="content-fr">Certifications professionnelles</span><span class="content-en" style="display:none;">Professional certifications</span></div>
+        <div class="edu-body">
+          <p><span class="content-fr"><strong>Harvard Business School Online :</strong> Financial Accounting (FSA) + Corporate Finance. <strong>Bloomberg Terminal :</strong> Bloomberg Market Concepts (BMC) certification. Formation pratique sur valorisation d'entreprise, analyse financière, et utilisation de terminaux Bloomberg pour data financière temps réel.</span><span class="content-en" style="display:none;"><strong>Harvard Business School Online:</strong> Financial Accounting (FSA) + Corporate Finance. <strong>Bloomberg Terminal:</strong> Bloomberg Market Concepts (BMC) certification. Practical training in business valuation, financial analysis, and Bloomberg terminal usage for real-time financial data.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 4: PROOF -->
+<section id="proof" style="background: linear-gradient(180deg, #14110F 0%, var(--ink) 100%);">
+  <div class="container">
+    <div class="section-tag"><span class="content-fr">Livrables</span><span class="content-en" style="display:none;">Deliverables</span></div>
+    <h2 class="section-title">
+      <span class="content-fr">Deux projets EDHEC.<br/>Un opérateur <em>devenu financier.</em></span>
+      <span class="content-en" style="display:none;">Two EDHEC projects.<br/>One operator <em>turned financier.</em></span>
+    </h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px;">
+      <div class="edu-card fade-in">
+        <div class="edu-tag"><span class="content-fr">Livrable 01</span><span class="content-en" style="display:none;">Deliverable 01</span></div>
+        <h3>$2.4B<br/><em>LBO Model</em></h3>
+        <div class="edu-meta">Tata Air India · <span class="content-fr">Entrée nov 2024</span><span class="content-en" style="display:none;">Nov 2024 Entry</span></div>
+        <div class="edu-body">
+          <p><strong><span class="content-fr">Ce que j'ai fait :</span><span class="content-en" style="display:none;">What I Did:</span></strong> <span class="content-fr">Structuré une <strong>stack de capital 6.0× leveraged</strong> (Senior 4.0×, Sub 1.5×, Mezz 0.5×) avec un <strong>chèque equity sponsor $340mm</strong> sur thèse de consolidation Air India-Vistara.</span><span class="content-en" style="display:none;">Structured a <strong>6.0× leveraged capital stack</strong> (Senior 4.0×, Sub 1.5×, Mezz 0.5×) with a <strong>$340mm sponsor equity check</strong> against an Air India-Vistara consolidation thesis.</span></p>
+          <p style="margin-top: 12px;"><strong><span class="content-fr">Ce que j'ai appris :</span><span class="content-en" style="display:none;">What I Learned:</span></strong> <span class="content-fr">La structure de capital est une négociation entre le deal qu'on veut et celui qu'on peut financer. La mezz coûte plus cher qu'on pense, mais achète l'alignement.</span><span class="content-en" style="display:none;">Capital structure is negotiation between the deal you want and the one you can finance. Mezz costs more than you'd guess, but buys alignment.</span></p>
+        </div>
+      </div>
+
+      <div class="edu-card fade-in">
+        <div class="edu-tag"><span class="content-fr">Livrable 02</span><span class="content-en" style="display:none;">Deliverable 02</span></div>
+        <h3><span class="content-fr">Mémo<br/>d'Investissement</span><span class="content-en" style="display:none;">VC Investment<br/>Memorandum</span></h3>
+        <div class="edu-meta"><span class="content-fr">Tech européen seed-stage · Avril 2026</span><span class="content-en" style="display:none;">European Seed-Stage Tech · April 2026</span></div>
+        <div class="edu-body">
+          <p><strong><span class="content-fr">Ce que j'ai fait :</span><span class="content-en" style="display:none;">What I Did:</span></strong> <span class="content-fr">Rédigé IM complet : sizing marché, diligence fondateurs, carte compétitive, comps, scénarios de returns, recommandation ajustée au risque.</span><span class="content-en" style="display:none;">Authored full IM: market sizing, founder diligence, competitive map, comps, scenario returns, risk-adjusted recommendation.</span></p>
+          <p style="margin-top: 12px;"><strong><span class="content-fr">Ce que j'ai appris :</span><span class="content-en" style="display:none;">What I Learned:</span></strong> <span class="content-fr">Un mémo VC est surtout un exercice d'écriture. Les chiffres vous font passer le filtre ; le narratif gagne la salle.</span><span class="content-en" style="display:none;">A VC memo is mostly a writing exercise. The numbers screen you in; the narrative wins the room.</span></p>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @media (max-width: 868px) {
+        #proof .container > div[style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+          gap: 28px !important;
+        }
+      }
+    </style>
+  </div>
+</section>
+
+<!-- SECTION 5: CONNECT -->
+<section id="connect" style="background: var(--ink); min-height: 80vh; padding: 100px 24px;">
+  <div class="container">
+    <div class="section-tag"><span class="content-fr">Travaillons Ensemble</span><span class="content-en" style="display:none;">Let's Work Together</span></div>
+    <h2 class="section-title">
+      <span class="content-fr">Ouvert aux rôles en M&A, VC,<br/>Conseil, et GTM.</span>
+      <span class="content-en" style="display:none;">Open to roles in M&A, VC,<br/>Consulting, and GTM.</span>
+    </h2>
+    <p class="section-lead">
+      <span class="content-fr">Basé à Lille. Mobile à travers l'Europe. Je réponds sous 24 heures.</span>
+      <span class="content-en" style="display:none;">Based in Lille. Mobile across Europe. I respond within 24 hours.</span>
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: start; margin-top: 48px;">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <a href="mailto:Pawan.kumar@edhec.com" style="display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; background: rgba(245,243,238,0.04); border: 1px solid var(--line); border-radius: 8px; color: var(--bone); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(201,169,97,0.12)'; this.style.borderColor='rgba(201,169,97,0.4)'; this.style.transform='translateX(4px)';" onmouseout="this.style.background='rgba(245,243,238,0.04)'; this.style.borderColor='var(--line)'; this.style.transform='translateX(0)';">
+          <div>
+            <div style="font-size: 11px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase;">EMAIL</div>
+            <div style="font-size: 16px; color: var(--bone); font-weight: 500; margin-top: 2px;">Pawan.kumar@edhec.com</div>
+          </div>
+          <span style="font-size: 20px; color: var(--champagne);">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/pawan-kumar-iiitg/" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; background: rgba(245,243,238,0.04); border: 1px solid var(--line); border-radius: 8px; color: var(--bone); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(201,169,97,0.12)'; this.style.borderColor='rgba(201,169,97,0.4)'; this.style.transform='translateX(4px)';" onmouseout="this.style.background='rgba(245,243,238,0.04)'; this.style.borderColor='var(--line)'; this.style.transform='translateX(0)';">
+          <div>
+            <div style="font-size: 11px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase;">LINKEDIN</div>
+            <div style="font-size: 16px; color: var(--bone); font-weight: 500; margin-top: 2px;">/in/pawan-kumar-iiitg</div>
+          </div>
+          <span style="font-size: 20px; color: var(--champagne);">→</span>
+        </a>
+        <a href="https://www.vanivert.eu" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; background: rgba(245,243,238,0.04); border: 1px solid var(--line); border-radius: 8px; color: var(--bone); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(201,169,97,0.12)'; this.style.borderColor='rgba(201,169,97,0.4)'; this.style.transform='translateX(4px)';" onmouseout="this.style.background='rgba(245,243,238,0.04)'; this.style.borderColor='var(--line)'; this.style.transform='translateX(0)';">
+          <div>
+            <div style="font-size: 11px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase;">VANIVERT AI</div>
+            <div style="font-size: 16px; color: var(--bone); font-weight: 500; margin-top: 2px;">vanivert.eu</div>
+          </div>
+          <span style="font-size: 20px; color: var(--champagne);">→</span>
+        </a>
+      </div>
+
+      <div style="background: rgba(245,243,238,0.025); border: 1px solid var(--line); border-radius: 12px; padding: 28px 24px;">
+        <h4 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--bone); margin-bottom: 6px;"><span class="content-fr">Questions Rapides</span><span class="content-en" style="display:none;">Quick Questions</span></h4>
+        <p style="font-size: 13px; color: var(--mute); margin-bottom: 20px;"><span class="content-fr">Réponses courantes pour recruteurs</span><span class="content-en" style="display:none;">Common recruiter questions answered</span></p>
+        <p style="font-size: 14px; line-height: 1.6; color: var(--bone-dim);"><span class="content-fr">Cliquez sur le bouton doré en bas à droite pour accéder au chat complet avec 35 questions en français et 35 en anglais.</span><span class="content-en" style="display:none;">Click the gold button in the bottom-right corner to access the full chat with 35 questions in French and 35 in English.</span></p>
+      </div>
+    </div>
+
+    <style>
+      @media (max-width: 968px) {
+        #connect .container > div[style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+          gap: 48px !important;
+        }
+      }
+    </style>
+  </div>
+</section>
+
+<footer>
+  <p>PAWAN KUMAR · 2026 · <span class="content-fr">CONÇU À LILLE</span><span class="content-en" style="display:none;">DESIGNED IN LILLE</span></p>
+</footer>
+
+<!-- FLOATING CHAT WIDGET -->
+<button class="chat-fab" id="chatFab" aria-label="Open chat">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="chat-pulse"></span>
+</button>
+
+<div class="chat-container" id="chatContainer">
+  <div class="chat-header">
+    <div class="chat-avatar"></div>
+    <div style="flex: 1;">
+      <h4>Pawan Kumar</h4>
+      <div class="chat-status">● <span class="content-fr">Actif · Répond sous 24h</span><span class="content-en" style="display:none;">Active · Responds within 24h</span></div>
+    </div>
+    <button class="chat-close-btn" id="chatCloseBtn" aria-label="Close">×</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot" id="initialMsg"><span class="content-fr">Bonjour ! Posez-moi une question sur mon parcours, mes compétences, ou mes projets.</span><span class="content-en" style="display:none;">Hello! Ask me about my background, skills, or projects.</span></div>
+  </div>
+  <div class="chat-disclaimer"><span class="content-fr">Certaines réponses peuvent contenir des inexactitudes</span><span class="content-en" style="display:none;">Some responses may contain inaccuracies</span></div>
+  <div class="chat-quick" id="chatQuick"></div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+<script>
+// ===== LANGUAGE TOGGLE =====
+let currentLang = 'fr'; // DEFAULT FRENCH
+
+function switchLanguage(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  
+  // Toggle content visibility
+  document.querySelectorAll('.content-fr').forEach(el => el.style.display = lang === 'fr' ? '' : 'none');
+  document.querySelectorAll('.content-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  
+  // Rebuild chat questions
+  buildChat();
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
+});
+
+// ===== HERO VIDEO + PARTICLES =====
+(function initHero() {
+  const video = document.getElementById('hero-video');
+  const videoBg = document.getElementById('hero-video-bg');
+  const content = document.querySelector('.hero-content');
+  const canvas = document.getElementById('particles-canvas');
+  const flightPath = document.getElementById('flight-path');
+  
+  video.src = 'assets/hero-video.mp4';
+  videoBg.src = 'assets/hero-video.mp4';
+  
+  video.addEventListener('loadeddata', () => {
+    video.classList.add('ready');
+    content.classList.add('ready');
+    canvas.classList.add('ready');
+    flightPath.classList.add('ready');
+    
+    // Animate airplane
+    setTimeout(() => {
+      const airplane = document.getElementById('airplane');
+      const arcPath = document.getElementById('arc-path');
+      const pathLength = arcPath.getTotalLength();
+      let progress = 0;
+      
+      function animatePlane() {
+        progress += 0.002;
+        if (progress > 1) progress = 0;
+        
+        const point = arcPath.getPointAtLength(progress * pathLength);
+        const nextPoint = arcPath.getPointAtLength(Math.min((progress + 0.01) * pathLength, pathLength));
+        const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+        
+        airplane.setAttribute('transform', `translate(${point.x},${point.y}) rotate(${angle})`);
+        airplane.setAttribute('opacity', progress > 0.02 ? '1' : '0');
+        
+        requestAnimationFrame(animatePlane);
+      }
+      animatePlane();
+    }, 1500);
+  });
+
+  // Video controls
+  const playBtn = document.getElementById('playBtn');
+  const muteBtn = document.getElementById('muteBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const soundIcon = document.getElementById('soundIcon');
+  const muteIcon = document.getElementById('muteIcon');
+
+  let isPlaying = true;
+  playBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      video.pause();
+      videoBg.pause();
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+    } else {
+      video.play();
+      videoBg.play();
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+    }
+    isPlaying = !isPlaying;
+  });
+  playIcon.style.display = 'none';
+  pauseIcon.style.display = 'block';
+
+  let isMuted = true;
+  muteBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    isMuted = !isMuted;
+    if (isMuted) {
+      soundIcon.style.display = 'block';
+      muteIcon.style.display = 'none';
+    } else {
+      soundIcon.style.display = 'none';
+      muteIcon.style.display = 'block';
+    }
+  });
+
+  // Three.js particles
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+  renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const particleCount = 120;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = [];
+
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 20;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    velocities.push({
+      x: (Math.random() - 0.5) * 0.01,
+      y: Math.random() * 0.02 + 0.01,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const material = new THREE.PointsMaterial({
+    color: 0xE8C77A,
+    size: 0.15,
+    transparent: true,
+    opacity: 0.6,
+    blending: THREE.AdditiveBlending
+  });
+
+  const particles = new THREE.Points(geometry, material);
+  scene.add(particles);
+
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+  });
+
+  let time = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.01;
+
+    const pos = particles.geometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      const vel = velocities[i];
+      pos[i * 3] += vel.x + Math.sin(time + vel.phase) * 0.005;
+      pos[i * 3 + 1] += vel.y;
+      pos[i * 3 + 2] += Math.cos(time + vel.phase) * 0.003;
+
+      if (pos[i * 3 + 1] > 10) pos[i * 3 + 1] = -10;
+      if (Math.abs(pos[i * 3]) > 10) pos[i * 3] *= -1;
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    camera.position.x += (mouseX - camera.position.x) * 0.05;
+    camera.position.y += (-mouseY - camera.position.y) * 0.05;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+  });
+})();
+
+// ===== SCROLL ANIMATIONS =====
+const observerOptions = {
+  threshold: 0.2,
+  rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.timeline-item, .fade-in').forEach(el => observer.observe(el));
+
+// ===== CHAT Q&A (35 FR + 35 EN) =====
+const QA_FR = [
+  { q: "Pourquoi vous embaucher ?", a: "J'ai opéré dans trois mondes : commandement maritime dans 15+ pays, scale d'un SaaS à €100K MRR, et structuration d'une levée chez Vanivert. Peu de candidats ont réellement géré un P&L avant d'entrer dans votre bureau." },
+  { q: "Qu'est-ce qui vous différencie des autres étudiants EDHEC ?", a: "La plupart arrivent à l'EDHEC avec la théorie. Moi, je sais ce que ça fait de perdre un client, rater une marge cible, ou naviguer un navire en mer agitée." },
+  { q: "Parlez-moi de Vanivert AI", a: "Voice AI pour PME européennes sur stack souverain open-source. Trois co-fondateurs. 200+ entretiens clients à Lille et Paris. Le round se structure via BSA-Air avec discussions actives." },
+  { q: "Quel est votre rôle chez Vanivert ?", a: "Commercial et finance. J'ai structuré les modèles trois états, projections DCF, analyses comparables pour fonds PE et family offices." },
+  { q: "Expliquez-moi le LBO Tata", a: "Rachat hypothétique par sponsor PE de l'entrée $2.4B de Tata dans Air India. Structure 6.0× : Senior 4.0×, Sub 1.5×, Mezz 0.5×, avec $340mm d'equity sponsor." },
+  { q: "Comment screener une cible M&A ?", a: "Commence par le rationnel stratégique, pas le modèle. Je mappe le positionnement concurrentiel, concentration clients, qualité EBITDA avant de toucher Excel." },
+  { q: "Comment évaluez-vous une opportunité VC ?", a: "Quatre couches : qualité fondateur, taille de marché avec TAM bottoms-up, signaux de product-market fit, et potentiel returns power-law." },
+  { q: "Quelle est votre approche GTM ?", a: "Outbound pour valider l'ICP, inbound pour scaler. Chez Alliance j'ai fermé les premiers deals personnellement, puis recruté des leads régionaux." },
+  { q: "Quels frameworks consulting utilisez-vous ?", a: "Market entry, competitive positioning, build-vs-buy. Mais le meilleur framework : parler à 10 clients avant de toucher une slide." },
+  { q: "Quel est votre style de management ?", a: "Contexte, pas contrôle. Je fixe des objectifs clairs, donne les outils et l'autorité, puis review les résultats weekly." },
+  { q: "Comment gérez-vous les deadlines serrées ?", a: "J'étais officier de pont gérant du cargo multi-million euros en temps réel. J'ai construit un modèle LBO et un mémo VC en parallèle en moins de 3 semaines." },
+  { q: "Parlez-vous français ?", a: "B1 et en amélioration. Anglais C1 fluent. Hindi natif. Pour rôles Suisse/UK/EU, documentation gérée via Bureau International EDHEC." },
+  { q: "Avez-vous un visa de travail en France ?", a: "Oui. Visa étudiant long séjour avec autorisation de travail complète jusqu'en août 2028." },
+  { q: "Quand êtes-vous disponible ?", a: "À partir du 1er juin 2026. Stage obligatoire post-M1, M2 et graduation en 2027." },
+  { q: "Quels rôles vous intéressent ?", a: "M&A, Venture Capital, Conseil Stratégique, et Go-to-Market, partout en Europe." },
+  { q: "Comment vous contacter ?", a: "Email : Pawan.kumar@edhec.com | LinkedIn : pawan-kumar-iiitg | Je réponds sous 24h." },
+  { q: "Pourquoi l'Europe pour l'IA vocale ?", a: "Stack souverain = avantage réglementaire. RGPD, confidentialité des données, hébergement local. Les artisans veulent savoir où vont leurs données." },
+  { q: "Comment avez-vous construit le modèle LBO ?", a: "Modèle trois états dans Excel. Thèse consolidation Air India-Vistara. Mapping des risques d'exécution sur timeline d'intégration." },
+  { q: "Parlez-moi de votre mémo VC", a: "Mémo complet : sizing marché, diligence fondateurs, carte compétitive, comps, scénarios returns, recommandation ajustée au risque." },
+  { q: "Quelle est votre approche de la diligence M&A ?", a: "Quatre piliers : strategic fit, qualité management, normalized EBITDA, synergies crédibles. Le modèle valide la thèse." },
+  { q: "Avez-vous de l'expérience en modélisation financière ?", a: "Oui. Modèles trois états, DCF, LBO, comps, unit economics. Excel avancé + VBA pour automation." },
+  { q: "Quelle est votre thèse sur l'investissement early-stage ?", a: "Le produit change, le marché pivote, mais l'équipe reste. Je cherche des fondateurs qui connaissent intimement le problème." },
+  { q: "Comment sourcez-vous des deals VC ?", a: "Réseaux EDHEC Entrepreneurs, événements tech européens (Station F, EuraTechnologies), intro via co-fondateurs." },
+  { q: "Comment construisez-vous un playbook sales ?", a: "Je record les 10 premiers appels, j'identifie les objections récurrentes, je codifie les réponses, puis checklist visuelle." },
+  { q: "Expérience en scaling B2B SaaS ?", a: "Alliance : 0 à €100K MRR en 18 mois, 5 villes, 100+ partenaires B2B. Tech, ops, supply chain, finance - tout géré." },
+  { q: "Comment structurez-vous un problème ambigu ?", a: "Formé en mer : décisions avec données incomplètes. Décider avec 70% d'info, puis corriger vite." },
+  { q: "Expérience en transformation opérationnelle ?", a: "Chez Alliance : mapper le process end-to-end, trouver la contrainte, la fixer. La contrainte était l'onboarding : checklist visuel, churn 15% → 6% en 2 semaines." },
+  { q: "Comment gérez-vous l'ambiguïté ?", a: "Formé pour ça en mer. Décisions avec données incomplètes, conditions qui changent. Je décide avec 70% d'information, puis j'ajuste." },
+  { q: "Que vous a appris votre expérience maritime ?", a: "La paperasse est le deal. La précision est survie. Gérer du cargo multi-million euros m'a appris que l'exécution bat la stratégie." },
+  { q: "Pourquoi avoir quitté le maritime ?", a: "Revenu de mer avec une question : comment les supply chains que j'opérais étaient-elles construites ? Ça m'a mené à Alliance, puis EDHEC." },
+  { q: "Pourquoi EDHEC ?", a: "Août 2025 : j'ai quitté une entreprise profitable pour apprendre le langage du capital. EDHEC Grande École, spé Corporate Finance." },
+  { q: "Quels cours EDHEC vous ont le plus marqué ?", a: "Corporate finance, LBO mechanics, VC deal structuring. Mais le plus utile : 200+ customer interviews pour Vanivert." },
+  { q: "Pouvez-vous travailler en Suisse/UK ?", a: "Pour rôles hors France, documentation gérée via Bureau International Étudiant EDHEC. Disponible pour mobilité européenne." },
+  { q: "Êtes-vous ouvert à d'autres secteurs ?", a: "Oui. Supply chain, ops, AI strategy aussi. J'ai les compétences cross-functional." },
+  { q: "Où êtes-vous basé ?", a: "Lille, France. Mobile à travers l'Europe." }
+];
+
+const QA_EN = [
+  { q: "Why should we hire you?", a: "I've operated in three worlds: maritime command across 15+ countries, scaled a SaaS to €100K MRR, and structured a fundraise at Vanivert. Few candidates have actually run a P&L." },
+  { q: "What makes you different from other EDHEC students?", a: "Most arrive at EDHEC knowing theory. I arrived knowing what it feels like to lose a client, miss a margin target, or navigate a vessel in rough seas." },
+  { q: "Tell me about Vanivert AI", a: "Voice AI for European SMBs on a sovereign EU open-source stack. Three co-founders. 200+ customer interviews in Lille and Paris. Round structuring via BSA-Air." },
+  { q: "What's your role at Vanivert?", a: "Commercial and finance. I structured three-statement models, DCF projections, comparable analyses for PE funds and family offices." },
+  { q: "Walk me through the Tata LBO", a: "Hypothetical PE-sponsor takeover of Tata's $2.4B Air India entry. 6.0× leveraged capital stack: Senior 4.0×, Sub 1.5×, Mezz 0.5×, $340mm sponsor equity." },
+  { q: "How would you screen an M&A target?", a: "Start with strategic rationale, not the model. I map competitive positioning, customer concentration, EBITDA quality before touching spreadsheets." },
+  { q: "How do you evaluate a VC opportunity?", a: "Four layers: founder quality, market size with bottoms-up TAM, product-market fit signals, and power-law return potential." },
+  { q: "What's your GTM approach?", a: "Outbound to validate the ICP, inbound to scale. At Alliance I closed the first deals personally, then hired regional leads." },
+  { q: "What consulting frameworks do you use?", a: "Market entry, competitive positioning, build-vs-buy. But the best framework I know is talking to 10 customers before touching a slide." },
+  { q: "What's your management style?", a: "Context, not control. I set clear goals, give people tools and authority, then review outcomes weekly." },
+  { q: "Can you work under tight deadlines?", a: "I was a deck officer managing multi-million euro cargo in real time. Built a full LBO model and investment memo in parallel in under 3 weeks." },
+  { q: "Do you speak French?", a: "B1 and improving. English C1 fluent. Hindi native. For roles in Switzerland, UK, or other EU countries, documentation managed through EDHEC International Office." },
+  { q: "Do you have French work authorization?", a: "Yes. Long-stay student visa with full work authorization in France through August 2028." },
+  { q: "When are you available?", a: "From June 1, 2026. Mandatory post-M1 internship, M2 and graduation in 2027." },
+  { q: "What roles interest you?", a: "M&A, Venture Capital, Strategy Consulting, and Go-to-Market, anywhere in Europe." },
+  { q: "How do I get in touch?", a: "Email: Pawan.kumar@edhec.com | LinkedIn: pawan-kumar-iiitg | I respond within 24h." },
+  { q: "Why Europe for voice AI?", a: "Sovereign stack = regulatory advantage. GDPR, data privacy, local hosting. Artisans want to know where their data goes." },
+  { q: "How did you build the LBO model?", a: "Three-statement model in Excel. Air India-Vistara consolidation thesis. Mapped execution risk to integration timeline." },
+  { q: "Tell me about your VC investment memo", a: "Full IM: market sizing, founder diligence, competitive map, comps, scenario returns, risk-adjusted recommendation." },
+  { q: "What's your M&A diligence approach?", a: "Four pillars: strategic fit, management quality, normalized EBITDA, credible synergies. The model validates the thesis." },
+  { q: "Do you have financial modeling experience?", a: "Yes. Three-statement models, DCF, LBO, comps, unit economics. Advanced Excel + VBA for automation." },
+  { q: "What's your early-stage investment thesis?", a: "The product changes, the market pivots, but the team stays. I look for founders who know the problem intimately." },
+  { q: "How do you source VC deals?", a: "EDHEC Entrepreneurs network, European tech events (Station F, EuraTechnologies), founder intros." },
+  { q: "How do you build a sales playbook?", a: "I record the first 10 calls, identify recurring objections, codify responses, then turn it into a visual checklist." },
+  { q: "B2B SaaS scaling experience?", a: "Alliance: 0 to €100K MRR in 18 months, 5 cities, 100+ B2B partners. Led tech, ops, supply chain, finance." },
+  { q: "How do you structure an ambiguous problem?", a: "Trained at sea: navigation decisions with incomplete data. Decide with 70% information, then course-correct fast." },
+  { q: "Operations transformation experience?", a: "At Alliance: map the process end-to-end, find the constraint, fix it. Constraint was onboarding: visual checklist, churn 15% → 6% in 2 weeks." },
+  { q: "How do you handle ambiguity?", a: "Trained for it at sea. Decisions with incomplete data, changing conditions. I decide with 70% information, then adjust quickly." },
+  { q: "What did maritime teach you?", a: "Paperwork is the deal. Precision is survival. Managing multi-million euro cargo taught me that execution beats strategy." },
+  { q: "Why did you leave maritime?", a: "Came back from sea with a question: how were the supply chains I operated actually built? That led me to Alliance, then EDHEC." },
+  { q: "Why EDHEC?", a: "August 2025: left a profitable company to learn the language of capital. EDHEC Grande École, specialization Corporate Finance." },
+  { q: "Which EDHEC courses impacted you most?", a: "Corporate finance, LBO mechanics, VC deal structuring. But the most useful: 200+ customer interviews for Vanivert." },
+  { q: "Can you work in Switzerland/UK?", a: "For roles outside France, documentation managed through EDHEC International Student Office. Available for European mobility." },
+  { q: "Are you open to other sectors?", a: "Yes. Supply chain, ops, AI strategy too. I have cross-functional skills." },
+  { q: "Where are you based?", a: "Lille, France. Mobile across Europe." }
+];
+
+function buildChat() {
+  const chatQuick = document.getElementById('chatQuick');
+  const currentQA = currentLang === 'fr' ? QA_FR : QA_EN;
+  
+  chatQuick.innerHTML = '';
+  currentQA.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-q-btn';
+    btn.textContent = item.q;
+    btn.addEventListener('click', () => askQuestion(item));
+    chatQuick.appendChild(btn);
+  });
+}
+
+function askQuestion(item) {
+  const chatBody = document.getElementById('chatBody');
+  const userMsg = document.createElement('div');
+  userMsg.className = 'chat-msg user';
+  userMsg.textContent = item.q;
+  chatBody.appendChild(userMsg);
+  
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chat-msg bot';
+    botMsg.textContent = item.a;
+    chatBody.appendChild(botMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }, 400);
+  
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Chat toggle
+const chatFab = document.getElementById('chatFab');
+const chatContainer = document.getElementById('chatContainer');
+const chatCloseBtn = document.getElementById('chatCloseBtn');
+
+chatFab.addEventListener('click', () => {
+  chatContainer.classList.add('open');
+  chatFab.classList.add('hidden');
+});
+
+chatCloseBtn.addEventListener('click', () => {
+  chatContainer.classList.remove('open');
+  chatFab.classList.remove('hidden');
+});
+
+// Initialize
+buildChat();
+</script>
+
+</body>
+</html>
